@@ -5,6 +5,12 @@ axios.defaults.baseURL = "https://notehub-public.goit.study/api";
 axios.defaults.headers.common["Authorization"] =
   `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`;
 
+export interface FetchNotesParams {
+  page: number;
+  perPage: number;
+  search: string;
+}
+
 export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
@@ -16,14 +22,15 @@ export interface CreateNoteParams {
   tag: NoteTag;
 }
 
-export const fetchNotes = async (
-  page: number,
-  search: string,
-): Promise<FetchNotesResponse> => {
+export const fetchNotes = async ({
+  page,
+  perPage,
+  search,
+}: FetchNotesParams): Promise<FetchNotesResponse> => {
   const { data } = await axios.get<FetchNotesResponse>("/notes", {
     params: {
       page,
-      perPage: 12,
+      perPage,
       ...(search && { search }),
     },
   });
